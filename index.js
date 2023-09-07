@@ -47,6 +47,7 @@ async function run() {
   try {
 
     const clientsMessageCollection = client.db("enaEmaTech").collection("clientsMessage");
+    const userCollection = client.db("enaEmaTech").collection("users");
 
 
     // Admin verify
@@ -65,7 +66,7 @@ async function run() {
     const verifyQuestion = async (req, res, next) =>{
 
       //TODO
-      
+
     }
 
 
@@ -74,6 +75,23 @@ async function run() {
         const result = await clientsMessageCollection.insertOne(newMessage);
         res.send(result);
 
+    })
+
+
+    // User Apis
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const email = user.email;
+      console.log(email);
+      // const existUserEmail = {email: email}
+      const existUser = await userCollection.findOne({ email: email });
+      if (existUser) {
+        return res.json("User Exist");
+      }
+      else {
+        const result = await userCollection.insertOne(user);
+        res.send(result);
+      }
     })
 
 
