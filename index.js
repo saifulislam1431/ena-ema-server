@@ -26,7 +26,6 @@ async function run() {
     const clientsMessageCollection = client.db("enaEmaTech").collection("clientsMessage");
 
     app.post("/clients-message" , async(req,res)=>{
-
         const newMessage = req.body;
         const result = await clientsMessageCollection.insertOne(newMessage);
         res.send(result);
