@@ -151,11 +151,13 @@ async function run() {
           res.send(result)
         })
 
-        app.get("/users/:email", verifyJWT, verifyAdmin, async (req, res) => {
+        app.get("/profile/:email", verifyJWT, verifyAdmin, async (req, res) => {
           const email = req.params.email;
-          const filter = {email: email}
-          const result = await userCollection.findOne({filter});
+          const query = {email: email}
+          if(query){
+            const result = await userCollection.findOne({query});
           res.send(result)
+          }
         })
 
 
