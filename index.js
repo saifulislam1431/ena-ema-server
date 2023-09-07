@@ -78,6 +78,13 @@ async function run() {
 
     })
 
+    app.get("/clients-message", verifyJWT, verifyAdmin, async(req,res)=>{
+      const result = await clientsMessageCollection.find({}).toArray();
+      res.send(result);
+
+  })
+
+
 
     // User Apis
     app.post("/users", async (req, res) => {
