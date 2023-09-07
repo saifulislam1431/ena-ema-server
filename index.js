@@ -50,6 +50,13 @@ async function run() {
     const userCollection = client.db("enaEmaTech").collection("users");
 
 
+        // JWT
+        app.post("/jwt", async (req, res) => {
+          const user = req.body;
+          const token = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: '4h' })
+          res.send({ token })
+        })
+
     // Admin verify
     const verifyAdmin = async (req, res, next) => {
       const email = req.decoded.email;
@@ -62,7 +69,6 @@ async function run() {
     }
 
     // Question Verify
-
     const verifyQuestion = async (req, res, next) =>{
 
       //TODO
