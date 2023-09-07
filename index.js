@@ -105,7 +105,7 @@ async function run() {
         // Admin APIs
 
 
-        app.patch("/users/admin/:id", verifyJWT, async (req, res) => {
+        app.patch("/users/admin/:id", verifyJWT, verifyAdmin, async (req, res) => {
           const id = req.params.id;
           const filter = { _id: new ObjectId(id) }
           const userUpdate = {
@@ -118,7 +118,7 @@ async function run() {
         })
 
 
-        app.delete("/users/admin/delete/:id", verifyJWT, async (req, res) => {
+        app.delete("/users/admin/delete/:id", verifyJWT, verifyAdmin, async (req, res) => {
           const id = req.params.id;
           const filter = { _id: new ObjectId(id) }
           const result = await userCollection.deleteOne(filter);
@@ -137,7 +137,7 @@ async function run() {
           }
         })
 
-        app.get("/users/admin/:email", verifyJWT, async (req, res) => {
+        app.get("/users/admin/:email", verifyJWT, verifyAdmin, async (req, res) => {
           const email = req.params.email;
           const query = { email: email };
           const user = await userCollection.findOne(query);
@@ -148,6 +148,13 @@ async function run() {
 
         app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
           const result = await userCollection.find().toArray();
+          res.send(result)
+        })
+
+        app.get("/users/:email", verifyJWT, verifyAdmin, async (req, res) => {
+          const email = req.params.email;
+          const filter = {email: email}
+          const result = await userCollection.findOne({filter});
           res.send(result)
         })
 
