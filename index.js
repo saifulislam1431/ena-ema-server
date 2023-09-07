@@ -131,6 +131,11 @@ async function run() {
           res.send(result);
         })
 
+        app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
+          const result = await userCollection.find().toArray();
+          res.send(result)
+        })
+
 
 
     // Connect the client to the server	(optional starting in v4.7)
