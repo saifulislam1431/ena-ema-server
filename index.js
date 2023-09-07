@@ -4,7 +4,7 @@ require("dotenv").config();
 const jwt = require('jsonwebtoken');
 const port = process.env.PORT || 5000;
 const app = express();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_User}:${process.env.DB_Pass}@cluster0.8cnv71c.mongodb.net/?retryWrites=true&w=majority`;
 
 app.use(cors());
@@ -68,12 +68,7 @@ async function run() {
       next()
     }
 
-    // Question Verify
-    const verifyQuestion = async (req, res, next) =>{
 
-      //TODO
-
-    }
 
 
     app.post("/clients-message" , async(req,res)=>{
@@ -99,6 +94,31 @@ async function run() {
         res.send(result);
       }
     })
+
+        // Admin APIs
+
+
+        app.patch("/users/admin/:id", verifyJWT, async (req, res) => {
+          const id = req.params.id;
+          const filter = { _id: new ObjectId(id) }
+          const userUpdate = {
+            $set: {
+              role: "admin"
+            }
+          };
+          const result = await userCollection.updateOne(filter, userUpdate);
+          res.send(result);
+        })
+    
+        app.get("/users/admin/:email", verifyJWT, async (req, res) => {
+          const email = req.params.email;
+          const query = { email: email };
+          const user = await userCollection.findOne(query);
+    
+          const result = { admin: user?.role === "admin" }
+          res.send(result);
+        })
+
 
 
     // Connect the client to the server	(optional starting in v4.7)
