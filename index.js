@@ -109,6 +109,14 @@ async function run() {
           const result = await userCollection.updateOne(filter, userUpdate);
           res.send(result);
         })
+
+
+        app.delete("/users/admin/delete/:id", verifyJWT, async (req, res) => {
+          const id = req.params.id;
+          const filter = { _id: new ObjectId(id) }
+          const result = await userCollection.deleteOne(filter);
+          res.send(result);
+        })
     
         app.get("/check/admin/:email", async (req, res) => {
           const email = req.params.email;
