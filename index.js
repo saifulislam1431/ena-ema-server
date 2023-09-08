@@ -48,6 +48,7 @@ async function run() {
 
     const clientsMessageCollection = client.db("enaEmaTech").collection("clientsMessage");
     const userCollection = client.db("enaEmaTech").collection("users");
+    const reviewsCollection = client.db("enaEmaTech").collection("reviews");
 
 
         // JWT
@@ -158,6 +159,14 @@ async function run() {
             const result = await userCollection.findOne(query);
           res.send(result)
 
+        })
+
+
+        // Reviews
+
+        app.get("/reviews",async(req,res)=>{
+          const result = await reviewsCollection.find({}).toArray();
+          res.send(result);
         })
 
 
