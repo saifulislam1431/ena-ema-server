@@ -146,7 +146,7 @@ async function run() {
           const query = { email: email };
           const user = await userCollection.findOne(query);
     
-          if(user?.role === "admin" && listedEmail.includes(user?.email)){
+          if(user?.role === "admin"){
             const result = { admin: user?.role === "admin" }
             return res.send(result);
           }else{
