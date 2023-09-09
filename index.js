@@ -64,10 +64,15 @@ async function run() {
       const email = req.decoded.email;
       const query = { email: email }
       const result = await userCollection.findOne(query)
-      if (result?.role !== "admin" && listedEmail.includes(result?.email)) {
+      if(!listedEmail.includes(result?.email)){
+        return res.status(403).send({ error: true, message: "Access denied" })
+      }
+      else if (result?.role !== "admin") {
         return res.status(403).send({ error: true, message: "Forbidden access" })
       }
-      next()
+      else{
+        next()
+      }
     }
 
 
