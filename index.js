@@ -136,11 +136,11 @@ async function run() {
           const email = req.params.email;
           const query = { email: email };
           const user = await userCollection.findOne(query);
-          if(user?.role === "admin" && listedEmail.includes(user?.email)){
-            const result = { admin: user?.role === "admin" }
-            return res.send(result);
+          const result = { admin: user?.role === "admin" }
+          if(user){
+          return res.send(result);
           }else{
-            return res.status(403).send({ error: true, message: "Access denied" })
+            res.send(false)
           }
         })
 
