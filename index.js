@@ -10,7 +10,6 @@ const uri = `mongodb+srv://${process.env.DB_User}:${process.env.DB_Pass}@cluster
 app.use(cors());
 app.use(express.json());
 
-const listedEmail = [process.env.ADMIN1]
 
 // JWT verify
 const verifyJWT = (req, res, next) => {
@@ -61,6 +60,7 @@ async function run() {
 
     // Admin verify
     const verifyAdmin = async (req, res, next) => {
+      const listedEmail = [process.env.ADMIN1]
       const email = req.decoded.email;
       const query = { email: email }
       const result = await userCollection.findOne(query)
