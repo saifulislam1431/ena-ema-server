@@ -10,6 +10,7 @@ const uri = `mongodb+srv://${process.env.DB_User}:${process.env.DB_Pass}@cluster
 app.use(cors());
 app.use(express.json());
 
+const listedEmail = [process.env.ADMIN1]
 
 // JWT verify
 const verifyJWT = (req, res, next) => {
@@ -60,7 +61,6 @@ async function run() {
 
     // Admin verify
     const verifyAdmin = async (req, res, next) => {
-      const listedEmail = [process.env.ADMIN1]
       const email = req.decoded.email;
       const query = { email: email }
       const result = await userCollection.findOne(query)
@@ -149,8 +149,13 @@ async function run() {
           const query = { email: email };
           const user = await userCollection.findOne(query);
     
-          const result = { admin: user?.role === "admin" }
-          res.send(result);
+          if(user?.role === "admin" && listedEmail.includes(user?.email)){
+            const result = { admin: user?.role === "admin" }
+            return res.send(result);
+          }else{
+            return res.status(403).send({ error: true, message: "Access denied" })
+          }
+          
         })
 
         app.get("/users", verifyJWT, verifyAdmin, async (req, res) => {
