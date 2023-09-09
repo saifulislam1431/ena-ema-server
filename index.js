@@ -60,7 +60,7 @@ async function run() {
 
     // Admin verify
     const verifyAdmin = async (req, res, next) => {
-      const listedEmail = ['saifulislam140301@gmail.com']
+      const listedEmail = [process.env.ADMIN1]
       const email = req.decoded.email;
       const query = { email: email }
       const result = await userCollection.findOne(query)
