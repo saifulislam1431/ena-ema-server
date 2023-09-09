@@ -60,14 +60,11 @@ async function run() {
 
     // Admin verify
     const verifyAdmin = async (req, res, next) => {
-      const listedEmail = ['saifulislam140301@gmail.com']
+
       const email = req.decoded.email;
       const query = { email: email }
       const result = await userCollection.findOne(query)
-      if(!listedEmail.includes(result?.email)){
-        return res.status(403).send({ error: true, message: "Access denied" })
-      }
-      else if (result?.role !== "admin") {
+      if (result?.role !== "admin") {
         return res.status(403).send({ error: true, message: "Forbidden access" })
       }
       else{
