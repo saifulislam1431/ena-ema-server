@@ -6,7 +6,7 @@ const port = process.env.PORT || 5000;
 const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 // const uri = `mongodb+srv://${process.env.DB_User}:${process.env.DB_Pass}@cluster0.8cnv71c.mongodb.net/?retryWrites=true&w=majority`;
-const uri = `mongodb+srv://enaEmaTechnologies:${process.env.DB_Pass}@ena-ema-technologies.mwy1cxr.mongodb.net/?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_User}:${process.env.DB_Pass}@ena-ema-technologies.mwy1cxr.mongodb.net/?retryWrites=true&w=majority`;
 
 app.use(cors());
 app.use(express.json());
