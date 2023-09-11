@@ -169,6 +169,18 @@ async function run() {
 
         })
 
+        app.patch("/message/:id", verifyJWT, verifyAdmin, async (req, res) => {
+          const id = req.params.id;
+          const filter = { _id: new ObjectId(id) }
+          const messageUpdate = {
+            $set: {
+              status: "Opened"
+            }
+          };
+          const result = await clientsMessageCollection.updateOne(filter, messageUpdate);
+          res.send(result);
+        })
+
 
         // Reviews
 
