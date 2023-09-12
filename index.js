@@ -34,7 +34,7 @@ const verifyJWT = (req, res, next) => {
 
 
 let config = {
-  service: 'gmail',
+  host: 'premium75.web-hosting.com',
   auth: {
     user: process.env.EMAIL_USER, // Your Gmail email address
     pass: process.env.EMAIL_PASS,  // Your Gmail password or an app-specific password
@@ -103,29 +103,44 @@ async function run() {
     })
 
 
-    app.post('/message/confirm', verifyJWT, verifyAdmin, async (req, res) => {
+    app.patch('/message/confirm/:id', verifyJWT, verifyAdmin, async (req, res) => {
       const newSendReq = req.body;
-      console.log(newSendReq);
+      // console.log(newSendReq);
+      const id = req.params.id;
+      // console.log(id);
+      const filter = { _id: new ObjectId(id) }
+
+
+
+
       try {
-        if (newSendReq) {
+        if (newSendReq && id) {
           const emailInfo = {
-            from: "enatest0@gmail.com",   // Your email address
+            from: "support@enaema.com",   // Your email address
             to: newSendReq.receiver, // Client's email address
             subject: newSendReq.subject,
             text: newSendReq.message,
           };
-          console.log(emailInfo);
-          const result = await sendMessagesCollection.insertOne(newSendReq);
-
+          // console.log(emailInfo);
           await transporter.sendMail(emailInfo);
-          return res.send(result)
+
+          const messageUpdate = {
+            $set: {
+              status: "Opened"
+            }
+          };
+          const result = await clientsMessageCollection.updateOne(filter, messageUpdate);
+          console.log(result);
+          res.send(result)
+
+          // res.status(200).json({ message: 'Message confirmed and email sent!' });
 
         }
       }
       // Send a confirmation email to the client
       catch(error) {
         console.log(error);
-        res.status(500).send({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Internal server error' });
       }
     });
 
@@ -211,17 +226,19 @@ async function run() {
 
     })
 
-    app.patch("/message/:id", verifyJWT, verifyAdmin, async (req, res) => {
-      const id = req.params.id;
-      const filter = { _id: new ObjectId(id) }
-      const messageUpdate = {
-        $set: {
-          status: "Opened"
-        }
-      };
-      const result = await clientsMessageCollection.updateOne(filter, messageUpdate);
-      res.send(result);
-    })
+    // app.patch("/message/:id", verifyJWT, verifyAdmin, async (req, res) => {
+    //   const id = req.params.id;
+    //   console.log(id);
+    //   const filter = { _id: new ObjectId(id) }
+    //   const messageUpdate = {
+    //     $set: {
+    //       status: "Opened"
+    //     }
+    //   };
+    //   const result = await clientsMessageCollection.updateOne(filter, messageUpdate);
+    //   console.log(result);
+    //   // res.send(result);
+    // })
 
 
     // Reviews
